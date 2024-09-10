@@ -57,12 +57,17 @@ export async function POST(request: NextRequest) {
             sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Cross-site requests
         });
 
+
         return response
 
 
 
     } catch (error) {
-        return NextResponse.json({ error: 'Failed to register user' }, { status: 500 })
+        if (error instanceof Error) {
+            return NextResponse.json({ error: error.message }, { status: 500 })
+        }
+
+        return NextResponse.json({ error: "An unknown error occurred" }, { status: 500 })
     }
 
 

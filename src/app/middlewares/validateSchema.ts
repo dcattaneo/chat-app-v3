@@ -12,7 +12,7 @@ export function validateSchema(schema: z.ZodSchema) {
                 return data.message;
             }), { status: 400 })
             // Handling any other unknown errors
-            return NextResponse.json({ error: "An unknown error occurred" }, { status: 500 })
+            return NextResponse.json({ error: "An unexpected error occurred" }, { status: 500 })
         }
     }
 }
