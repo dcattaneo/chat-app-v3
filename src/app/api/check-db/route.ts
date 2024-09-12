@@ -3,9 +3,18 @@ import { connectDB } from "@/app/lib/db";
 
 export async function GET() {
   try {
-    await connectDB();
-    console.log("DB Connected");
-    return NextResponse.json({ message: "Database connected successfully" });
+    const connection = await connectDB();
+    if (connection) {
+      console.log("DB Connected");
+      return NextResponse.json(
+        { message: "Database connected successfully" },
+        { status: 200 }
+      );
+    }
+    return NextResponse.json(
+      { message: "failed to connect to the Database" },
+      { status: 500 }
+    );
   } catch (error) {
     console.error("DB connection error:", error);
     return NextResponse.json(
