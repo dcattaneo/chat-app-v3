@@ -1,3 +1,5 @@
+@import url("https://fonts.cdnfonts.com/css/adventure-time-logo");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -16,8 +18,15 @@
 
 body {
   color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)),
+    url("/images/bg-adventure.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+* {
+  scrollbar-width: thin;
 }
 
 @layer utilities {
