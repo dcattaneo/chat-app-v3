@@ -42,19 +42,43 @@ export async function POST(request: NextRequest) {
 
     const token = (await createAccessToken({ id: savedUser._id })) as string;
 
-    const response = NextResponse.json({
-      id: savedUser._id,
-      username: savedUser.username,
-      email: savedUser.email,
-      profilePic: savedUser.profilePic,
-      createdAt: savedUser.createdAt,
-      updatedAt: savedUser.updatedAt,
-    });
+    const response = NextResponse.json(
+      {
+        id: savedUser._id,
+        username: savedUser.username,
+        email: savedUser.email,
+        profilePic: savedUser.profilePic,
+        createdAt: savedUser.createdAt,
+        updatedAt: savedUser.updatedAt,
+        token: token,
+      },
+      { status: 200 }
+    );
+
+    // ---For development in case of bugs:
+
+    // response.headers.set(
+    //   "Access-Control-Allow-Origin",
+    //   "http://localhost:3000"
+    // );
+    // response.headers.set("Access-Control-Allow-Credentials", "true");
+
+    // ---in case of using "next/headers":
+
+    // cookies().set("token", token, {
+    // httpOnly: true,
+    //secure: process.env.NODE_ENV === "production",
+    //sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    // maxAge: 60 * 60 * 24,
+    //path: "/",
+    // });
 
     response.cookies.set("token", token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // Only HTTPS in production
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // Cross-site requests
+      httpOnly: true, // For debugging, set to true in production
+      secure: process.env.NODE_ENV === "production", // HTTPS only in production
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax", // For cross-site requests
+      maxAge: 60 * 60 * 24, // expiration time: one day
+      path: "/",
     });
 
     return response;
