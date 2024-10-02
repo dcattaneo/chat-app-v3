@@ -8,13 +8,13 @@ export function validateSchema(schema: z.ZodSchema) {
       return NextResponse.next();
     } catch (error) {
       // Handling zod errors
-      if (error instanceof ZodError)
-        return NextResponse.json(
-          error.issues.map((data) => {
-            return data.message;
-          }),
-          { status: 400 }
-        );
+      if (error instanceof ZodError) {
+        const errors = error.issues.map((data) => {
+          return data.message;
+        });
+        return NextResponse.json({ message: errors }, { status: 400 });
+      }
+
       // Handling any other unknown errors
       return NextResponse.json(
         { error: "An unexpected error occurred" },
