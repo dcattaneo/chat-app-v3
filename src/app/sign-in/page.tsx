@@ -17,7 +17,7 @@ export default function SignIn() {
   const { user } = useAuth();
   const router = useRouter();
   const [inputs, setInputs] = useState<LoginInputs>(INITIAL_INPUTS);
-  const { login, isLoading, isError, error, data } = useSignIn();
+  const { login, isLoading } = useSignIn();
 
   useEffect(() => {
     if (user) {
