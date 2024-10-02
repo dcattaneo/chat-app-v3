@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "./auth-context/hooks/useAuth";
-import { useGetUsers } from "./hooks/useGetUsers";
+// import { useGetUsers } from "./hooks/useGetUsers";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
