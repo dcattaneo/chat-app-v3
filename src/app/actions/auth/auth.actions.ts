@@ -25,10 +25,11 @@ export const signUpAction = async ({
     return res.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
+      const message = error.response.data.message || "Registration failed.";
       console.log("Axios Error:", error.response.data.message);
-      throw new Error(error.response.data.message);
+      throw new Error(message);
     } else {
-      throw new Error("An unknown error occurred");
+      throw new Error("An unknown error occurred during registration");
     }
   }
 };
@@ -54,10 +55,11 @@ export const signInAction = async ({ email, password }: LoginInputs) => {
     return res.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
+      const message = error.response.data.message || "Login failed.";
       console.log("Axios Error:", error.response?.data.message);
-      throw new Error(error.response?.data.message);
+      throw new Error(message);
     } else {
-      throw new Error("An unknown error occurred");
+      throw new Error("An unknown error occurred during login");
     }
   }
 };
@@ -76,7 +78,7 @@ export const signOutAction = async () => {
     if (error instanceof AxiosError) {
       console.log("Axios Error:", error);
     } else {
-      throw new Error("An unknown error occurred");
+      throw new Error("An unknown error occurred during logout.");
     }
   }
 };
@@ -103,10 +105,11 @@ export const currentUserAction = async () => {
     return res.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
+      // const message = error.response.data.message || "Failed to fetch user data";
       console.log("Axios Error:", error.response?.data.message);
       return { error: error.response.data.message || "Axios error occurred" };
     } else {
-      throw new Error("An unknown error occurred");
+      throw new Error("An unknown error occurred while fetching user data.");
     }
   }
 };

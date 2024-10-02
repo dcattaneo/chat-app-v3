@@ -35,8 +35,8 @@ export function useSignUp() {
       router.push("/");
     },
     onError: (error) => {
-      console.log("an error has occurred during register:", error);
-      toast.error(error.message);
+      console.log("an error has occurred during register:", error.message);
+      toast.error(error.message || "Register attempt failed. Please try again");
     },
   });
 

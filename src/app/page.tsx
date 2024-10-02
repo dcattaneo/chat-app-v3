@@ -1,14 +1,12 @@
 "use client";
 
 import { useAuth } from "./auth-context/hooks/useAuth";
-// import { useGetUsers } from "./hooks/useGetUsers";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Home() {
   const { user } = useAuth();
   const router = useRouter();
-  // const { data, isError, error, isLoading } = useGetUsers();
   console.log(user);
 
   useEffect(() => {

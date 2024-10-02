@@ -25,13 +25,13 @@ export async function validateToken(request: NextRequest) {
     const secretKey = process.env.PRIVATE_KEY;
     if (!secretKey) {
       return NextResponse.json(
-        { message: "JWT secret key is missing" },
+        { message: "Authentication error" },
         { status: 401 }
       );
     }
     const verifiedToken = jwt.verify(token, secretKey, (err, decoded) => {
       if (err) {
-        return NextResponse.json({ message: "Invalid token" }, { status: 403 });
+        return NextResponse.json({ message: "Invalid token or authorization error" }, { status: 403 });
       }
 
       // destructuring the jwt id, which is the same id as the MongoDB user._id
