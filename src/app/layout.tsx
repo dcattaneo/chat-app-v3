@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 // import localFont from "next/font/local";
 import "./globals.css";
-
+import Provider from "@/util/Provider";
+import { AuthProvider } from "./auth-context/Auth.Context";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Chat-App",
@@ -15,10 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={` antialiased`}
-      >
-        {children}
+      <body className={` antialiased `}>
+        <Toaster />
+        <AuthProvider>
+          <Provider>{children}</Provider>
+        </AuthProvider>
       </body>
     </html>
   );
