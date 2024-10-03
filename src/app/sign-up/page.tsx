@@ -18,7 +18,7 @@ export default function SignUp() {
   const { user } = useAuth();
   const router = useRouter();
   const [inputs, setInputs] = useState<RegisterInputs>(INITIAL_INPUTS);
-  const { register, isLoading } = useSignUp();
+  const { register, isLoading, isError, error } = useSignUp();
 
   useEffect(() => {
     if (user) {
@@ -38,6 +38,7 @@ export default function SignUp() {
           <h1 className=" py-10 text-3xl font-semibold text-center text-gray-500 font-title">
             sign up - <span className=" text-red-300 font-title">next app</span>
           </h1>
+          {isError && <p>{error?.message}</p>}
 
           <form onSubmit={handleSubmit} className="px-2">
             <div className="py-2">
