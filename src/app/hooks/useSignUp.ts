@@ -35,9 +35,9 @@ export function useSignUp() {
       router.push("/");
     },
     onError: (error) => {
-      console.log("an error has occurred during register:", error.message);
       const message = error.message;
-      toast.error(message || "Register attempt failed. Please try again"); // the solution could be returning the custom message "register attemtp..." but i want to see the error from the backend :/
+      console.log("an error has occurred during register:", message);
+      toast.error("Register attempt failed. Please try again"); 
     },
   });
 

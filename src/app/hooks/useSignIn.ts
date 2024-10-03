@@ -37,9 +37,9 @@ export function useSignIn() {
       router.push("/");
     },
     onError: (error) => {
-      console.log("error occurred during login:", error.message);
       const message = error.message;
-      toast.error(message || "Login failed. Please try again");
+      console.log("error occurred during login:", message);
+      toast.error("Login failed. Please try again");
     },
   });
 
