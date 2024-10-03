@@ -6,6 +6,12 @@ import { LoginInputs, RegisterInputs } from "@/types";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
+interface AuthResponse {
+  success: boolean;
+  data?: any;
+  error?: string | string[];
+}
+
 export const signUpAction = async ({
   username,
   email,
@@ -34,32 +40,63 @@ export const signUpAction = async ({
   }
 };
 
-export const signInAction = async ({ email, password }: LoginInputs) => {
+// export const signInAction = async ({ email, password }: LoginInputs) => {
+//   try {
+//     const res = await axiosInstance.post(
+//       "/api/auth/sign-in",
+//       {
+//         email,
+//         password,
+//       },
+//       {
+//         withCredentials: true,
+//       }
+//     );
+
+//     if (!res) {
+//       throw new Error("No response from server");
+//     }
+//     console.log(res.data);
+
+//     return res.data;
+//   } catch (error) {
+//     if (error instanceof AxiosError && error.response) {
+//       const message = error.response.data.message || "Login failed.";
+//       console.log("Axios Error:", error.response?.data.message);
+//       throw new Error(message);
+//     } else {
+//       throw new Error("An unknown error occurred during login");
+//     }
+//   }
+// };
+
+export const signInAction = async ({
+  email,
+  password,
+}: LoginInputs): Promise<AuthResponse> => {
   try {
     const res = await axiosInstance.post(
       "/api/auth/sign-in",
-      {
-        email,
-        password,
-      },
-      {
-        withCredentials: true,
-      }
+      { email, password },
+      { withCredentials: true }
     );
 
     if (!res) {
       throw new Error("No response from server");
     }
-    console.log(res.data);
 
-    return res.data;
+    return { success: true, data: res.data };
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
-      const message = error.response.data.message || "Login failed.";
-      console.log("Axios Error:", error.response?.data.message);
-      throw new Error(message);
+      const message = Array.isArray(error.response.data.message)
+        ? error.response.data.message.join(", ")
+        : error.response.data.message || "Login failed";
+      return { success: false, error: message };
     } else {
-      throw new Error("An unknown error occurred during login");
+      return {
+        success: false,
+        error: "An unknown error occurred during login.",
+      };
     }
   }
 };
