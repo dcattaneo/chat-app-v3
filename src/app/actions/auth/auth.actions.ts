@@ -2,13 +2,13 @@
 
 import axiosInstance from "@/api/axiosInstance";
 import { AxiosError } from "axios";
-import { LoginInputs, RegisterInputs } from "@/types";
+import { LoginInputs, RegisterInputs, UserData } from "@/types";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 interface AuthResponse {
   success: boolean;
-  data?: any;
+  data?: UserData | null;
   error?: string | string[];
 }
 
