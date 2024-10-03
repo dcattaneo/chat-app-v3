@@ -38,7 +38,8 @@ export function useSignIn() {
     },
     onError: (error) => {
       console.log("error occurred during login:", error.message);
-      toast.error(error.message || "Login failed. Please try again");
+      const message = error.message;
+      toast.error(message || "Login failed. Please try again");
     },
   });
 
