@@ -1,11 +1,17 @@
 "use client";
 
-import { RegisterInputs } from "@/types";
+import { RegisterInputs, UserData } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import { signUpAction } from "../actions/auth/auth.actions";
 import { useAuth } from "../auth-context/hooks/useAuth";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+
+interface AuthResponse {
+  success: boolean;
+  data?: UserData | null;
+  error?: string | string[];
+}
 
 export function useSignUp() {
   const { setUser } = useAuth();
@@ -17,27 +23,35 @@ export function useSignUp() {
     isError,
     error,
     data,
-  } = useMutation({
+  } = useMutation<AuthResponse, Error, RegisterInputs>({
     mutationFn: async ({ username, email, password }: RegisterInputs) => {
       const success = handleInputErrors({ username, email, password });
       if (!success) {
         throw new Error("Input validation failed");
-        // return
       }
       // Call the actual sign-up action
       return await signUpAction({ username, email, password });
     },
-    onSuccess: (data) => {
-      localStorage.setItem("chat-user", JSON.stringify(data));
-      document.cookie = `token=${data.token}; path="/"`;
-      setUser(data);
-      toast.success("Registered  successfully");
-      router.push("/");
+    onSuccess: (response) => {
+      if (response.success && response.data) {
+        localStorage.setItem("chat-user", JSON.stringify(response.data));
+        document.cookie = `token=${response.data.token}; path=/`;
+        setUser(response.data);
+        toast.success("Registered successfully");
+        router.push("/");
+      } else if (response.error) {
+        if (Array.isArray(response.error)) {
+          response.error.forEach((msg) => toast.error(msg));
+        } else {
+          toast.error(response.error);
+        }
+      }
     },
     onError: (error) => {
-      const message = error.message;
-      console.log("an error has occurred during register:", message);
-      toast.error("Register attempt failed. Please try again"); 
+      console.log("an error has occurred during register:", error.message);
+      toast.error(
+        error.message || "Register attempt failed. Please try again."
+      );
     },
   });
 
@@ -46,7 +60,7 @@ export function useSignUp() {
 
 function handleInputErrors({ username, email, password }: RegisterInputs) {
   if (!username || !email || !password) {
-    toast.error("Please, fill in all  fields");
+    toast.error("Please, fill in all fields.");
     return false;
   }
 

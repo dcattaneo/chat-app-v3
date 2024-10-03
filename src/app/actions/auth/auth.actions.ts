@@ -16,7 +16,7 @@ export const signUpAction = async ({
   username,
   email,
   password,
-}: RegisterInputs) => {
+}: RegisterInputs): Promise<AuthResponse> => {
   try {
     const res = await axiosInstance.post(
       "/api/auth/sign-up",
@@ -28,47 +28,21 @@ export const signUpAction = async ({
       throw new Error("No response from server");
     }
 
-    return res.data;
+    return { success: true, data: res.data };
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
-      const message = error.response.data.message || "Registration failed.";
-      console.log("Axios Error:", error.response.data.message);
-      throw new Error(message);
+      const message = Array.isArray(error.response.data.message)
+        ? error.response.data.message.join(", ")
+        : error.response.data.message || "Registration failed";
+      return { success: false, error: message };
     } else {
-      throw new Error("An unknown error occurred during registration");
+      return {
+        success: false,
+        error: "An unknown error occurred during registration.",
+      };
     }
   }
 };
-
-// export const signInAction = async ({ email, password }: LoginInputs) => {
-//   try {
-//     const res = await axiosInstance.post(
-//       "/api/auth/sign-in",
-//       {
-//         email,
-//         password,
-//       },
-//       {
-//         withCredentials: true,
-//       }
-//     );
-
-//     if (!res) {
-//       throw new Error("No response from server");
-//     }
-//     console.log(res.data);
-
-//     return res.data;
-//   } catch (error) {
-//     if (error instanceof AxiosError && error.response) {
-//       const message = error.response.data.message || "Login failed.";
-//       console.log("Axios Error:", error.response?.data.message);
-//       throw new Error(message);
-//     } else {
-//       throw new Error("An unknown error occurred during login");
-//     }
-//   }
-// };
 
 export const signInAction = async ({
   email,
@@ -142,9 +116,10 @@ export const currentUserAction = async () => {
     return res.data;
   } catch (error) {
     if (error instanceof AxiosError && error.response) {
-      // const message = error.response.data.message || "Failed to fetch user data";
-      console.log("Axios Error:", error.response?.data.message);
-      return { error: error.response.data.message || "Axios error occurred" };
+      const message =
+        error.response.data.message || "Failed to fetch user data";
+      console.log("Axios Error:", message);
+      return { error: message || "Axios error occurred" };
     } else {
       throw new Error("An unknown error occurred while fetching user data.");
     }
