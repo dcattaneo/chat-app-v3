@@ -1,6 +1,6 @@
 "use client";
 
-import { LoginInputs } from "@/types";
+import { LoginInputs, UserData } from "@/types";
 import { useMutation } from "@tanstack/react-query";
 import { signInAction } from "../actions/auth/auth.actions";
 import { useAuth } from "../auth-context/hooks/useAuth";
@@ -57,7 +57,7 @@ import toast from "react-hot-toast";
 
 interface AuthResponse {
   success: boolean;
-  data?: any;
+  data?: UserData | null;
   error?: string | string[];
 }
 
